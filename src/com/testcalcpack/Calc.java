@@ -8,14 +8,18 @@ public class Calc {
     private boolean isFirstReady;
     private Operations operation;
     private boolean isPercentActive;
+    private boolean calculatedRightNow;
     Calc(){
         firstMember = 0;
         secondMember = 0;
         isFirstReady = false;
         isPercentActive = false;
+        calculatedRightNow = false;
     }
 
     void sentNum(int digit) {
+        if(calculatedRightNow) clear();
+
         if (!isFirstReady) {
             firstMember = firstMember * 10 + digit;
         } else {
@@ -24,6 +28,7 @@ public class Calc {
     }
 
     void setOperation(Operations operation) {
+        calculatedRightNow = false;
         if(operation == Operations.percent){isPercentActive = true;}
         else{
         this.operation = operation;
@@ -34,6 +39,7 @@ public class Calc {
     }
 
     void total(){
+
         double totalNum = 0;
         if(isPercentActive){
             secondMember = firstMember / 100 * secondMember;
@@ -56,9 +62,10 @@ public class Calc {
                 System.out.println("wrong input");
             }
         }
-        operation = null;
+//        operation = null;
         firstMember = totalNum;
         isFirstReady = false;
+        calculatedRightNow = true;
     }
 
     double getCurrentNum(){
@@ -70,15 +77,17 @@ public class Calc {
     }
 
     void eraseSmallestDigit(){
-        if(!isFirstReady){
-            firstMember = (double) ((int)firstMember / 10);
-        }
-        else{
-            secondMember = (double) ((int)secondMember / 10);
+        if(!calculatedRightNow) {
+            if (!isFirstReady) {
+                firstMember = (double) ((int) firstMember / 10);
+            } else {
+                secondMember = (double) ((int) secondMember / 10);
+            }
         }
     }
 
     void clear(){
+        calculatedRightNow = false;
         isFirstReady = false;
         firstMember = 0;
         secondMember = 0;
